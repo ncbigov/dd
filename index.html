@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Banana Maze Game</title>
+  <title>3D Banana Maze Game</title>
   <style>
     body {
       margin: 0;
@@ -18,7 +18,7 @@
 
     canvas {
       border: 2px solid #fff;
-      background-color: #444;
+      background-color: #111;
     }
 
     #score {
@@ -28,38 +28,57 @@
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <canvas id="gameCanvas"></canvas>
   <div id="score">Score: 0</div>
 
   <script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-    const scoreDisplay = document.getElementById("score");
+    // Three.js setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.set(0, 10, 20);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-    const gridSize = 20;
-    const tile = canvas.width / gridSize;
-    const rows = canvas.height / tile;
+    // Light
+    const light = new THREE.PointLight(0xffffff, 1);
+    light.position.set(5, 5, 5);
+    scene.add(light);
 
-    let player = { x: 1, y: 1 };
-    let target = { x: rows - 2, y: rows - 2 };
-    let score = 0;
+    // Ground
+    const groundGeometry = new THREE.PlaneGeometry(50, 50);
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2;
+    scene.add(ground);
 
-    const maze = Array.from({ length: rows }, () =>
-      Array.from({ length: gridSize }, () => 0)
+    // Maze size
+    const mazeSize = 10;
+    const cubeSize = 2;
+    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+
+    const maze = Array.from({ length: mazeSize }, () =>
+      Array.from({ length: mazeSize }, () => 0)
     );
 
-    // Create maze
+    // Generate maze
     function generateMaze() {
-      maze[0][1] = 1;
-      maze[rows - 1][gridSize - 2] = 1;
-
-      for (let i = 0; i < rows; i++) {
+      // Create walls
+      for (let i = 0; i < mazeSize; i++) {
         maze[i][0] = 1;
-        maze[i][gridSize - 1] = 1;
+        maze[i][mazeSize - 1] = 1;
+        maze[0][i] = 1;
+        maze[mazeSize - 1][i] = 1;
       }
 
-      for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < gridSize; j++) {
+      // Add random walls
+      for (let i = 0; i < mazeSize; i++) {
+        for (let j = 0; j < mazeSize; j++) {
           if (Math.random() < 0.3) {
             maze[i][j] = 1;
           }
@@ -67,60 +86,86 @@
       }
     }
 
-    function drawMaze() {
-      for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < gridSize; j++) {
+    generateMaze();
+
+    // Create maze cubes
+    function createMazeCubes() {
+      for (let i = 0; i < mazeSize; i++) {
+        for (let j = 0; j < mazeSize; j++) {
           if (maze[i][j] === 1) {
-            ctx.fillStyle = "#666";
-            ctx.fillRect(j * tile, i * tile, tile, tile);
-          } else {
-            ctx.fillStyle = "#333";
-            ctx.fillRect(j * tile, i * tile, tile, tile);
+            const cube = new THREE.Mesh(
+              new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize),
+              cubeMaterial
+            );
+            cube.position.set(j * cubeSize - mazeSize / 2, 0, i * cubeSize - mazeSize / 2);
+            scene.add(cube);
           }
         }
       }
     }
 
-    function drawPlayer() {
-      ctx.fillStyle = "#ffcc00";
-      ctx.fillRect(player.x * tile, player.y * tile, tile, tile);
-    }
+    createMazeCubes();
 
-    function drawTarget() {
-      ctx.fillStyle = "#00ff00";
-      ctx.fillRect(target.x * tile, target.y * tile, tile, tile);
-    }
+    // Player (banana)
+    const player = new THREE.Mesh(
+      new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize),
+      new THREE.MeshStandardMaterial({ color: 0xffcc00 })
+    );
+    player.position.set(-mazeSize / 2 + 1, 0.5, -mazeSize / 2 + 1);
+    scene.add(player);
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawMaze();
-      drawPlayer();
-      drawTarget();
-    }
+    // Target (green cube)
+    const target = new THREE.Mesh(
+      new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize),
+      new THREE.MeshStandardMaterial({ color: 0x00ff00 })
+    );
+    target.position.set(-mazeSize / 2 + mazeSize - 2, 0.5, -mazeSize / 2 + mazeSize - 2);
+    scene.add(target);
 
+    // Score
+    const scoreDisplay = document.getElementById("score");
+    let score = 0;
+
+    // Move player
     function movePlayer(dx, dy) {
+      const newX = player.position.x + dx * cubeSize;
+      const newZ = player.position.z + dy * cubeSize;
+
+      // Check if the new position is in bounds and not a wall
+      const i = Math.floor((player.position.z + mazeSize / 2) / cubeSize);
+      const j = Math.floor((player.position.x + mazeSize / 2) / cubeSize);
+
       if (
-        player.x + dx >= 0 &&
-        player.x + dx < gridSize &&
-        player.y + dy >= 0 &&
-        player.y + dy < rows &&
-        maze[player.y + dy][player.x + dx] === 0
+        i >= 0 &&
+        i < mazeSize &&
+        j >= 0 &&
+        j < mazeSize &&
+        maze[i][j] === 0
       ) {
-        player.x += dx;
-        player.y += dy;
+        player.position.set(newX, 0.5, newZ);
       }
     }
 
+    // Check win
     function checkWin() {
-      if (player.x === target.x && player.y === target.y) {
+      if (
+        player.position.x === target.position.x &&
+        player.position.z === target.position.z
+      ) {
         score++;
         scoreDisplay.textContent = "Score: " + score;
         generateMaze();
-        player = { x: 1, y: 1 };
-        target = { x: rows - 2, y: rows - 2 };
+        createMazeCubes();
+        player.position.set(-mazeSize / 2 + 1, 0.5, -mazeSize / 2 + 1);
+        target.position.set(
+          -mazeSize / 2 + mazeSize - 2,
+          0.5,
+          -mazeSize / 2 + mazeSize - 2
+        );
       }
     }
 
+    // Handle keyboard input
     document.addEventListener("keydown", (e) => {
       switch (e.key) {
         case "ArrowUp":
@@ -136,12 +181,23 @@
           movePlayer(1, 0);
           break;
       }
-      draw();
       checkWin();
     });
 
-    generateMaze();
-    draw();
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Handle window resize
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>
