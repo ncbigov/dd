@@ -1,101 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Random Banana Sentence</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fff9c4;
-            color: #8b4513;
-            text-align: center;
-            padding: 50px;
-        }
-
-        h1 {
-            color: #d2691e;
-        }
-
-        p {
-            font-size: 1.2em;
-        }
-
-        .person {
-            font-style: italic;
-            color: #468252;
-        }
-
-        button {
-            background-color: #d2691e;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 8px;
-        }
-
-        button:hover {
-            background-color: #8b4513;
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #654321;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>3D Banana Catch Game</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #222; }
+    canvas { display: block; }
+  </style>
 </head>
 <body>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+  <script>
+    // Scene, Camera, Renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-    <h1>🍌 Random Banana Sentence</h1>
-    <p>
-        Here's a random banana sentence about a random person on the internet:
-    </p>
-    <div id="sentence" style="margin: 20px auto; max-width: 600px;">
-        <p id="person" class="person"></p>
-        <p id="banana-sentence"></p>
-    </div>
-    <button onclick="generateSentence()">Generate Sentence</button>
+    // Light
+    const light = new THREE.PointLight(0xffffff, 1);
+    light.position.set(5, 5, 5);
+    scene.add(light);
 
-    <footer>
-        &copy; 2025 Banana Lover
-    </footer>
+    // Ground
+    const groundGeometry = new THREE.PlaneGeometry(20, 20);
+    const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x222222, side: THREE.DoubleSide });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2;
+    scene.add(ground);
 
-    <script>
-        const names = [
-            "Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Hank", "Ivy", "Jack",
-            "Karen", "Leo", "Mona", "Neil", "Olivia", "Peter", "Quinn", "Raj", "Sara", "Tom"
-        ];
+    // Banana (Player)
+    const bananaGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+    const bananaMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700 });
+    const playerBanana = new THREE.Mesh(bananaGeometry, bananaMaterial);
+    playerBanana.position.set(0, 1, 0);
+    scene.add(playerBanana);
 
-        const sentences = [
-            "Bananas are the perfect snack for someone like you.",
-            "You're as smooth as a banana peel.",
-            "Bananas are the only fruit that can make you smile like that.",
-            "If you're feeling down, just think of a banana.",
-            "You're the kind of person who would love bananas.",
-            "Bananas are the fruit of the gods — and you're the god of this sentence.",
-            "You're as sweet as a banana.",
-            "Bananas are like you — always in a good mood.",
-            "You're the kind of person who would never say no to a banana.",
-            "Bananas are the perfect fruit for someone as awesome as you."
-        ];
+    // Falling Bananas
+    const fallingBananas = [];
+    const bananaCount = 20;
 
-        function getRandomItem(list) {
-            return list[Math.floor(Math.random() * list.length)];
+    for (let i = 0; i < bananaCount; i++) {
+      const banana = new THREE.Mesh(
+        bananaGeometry,
+        bananaMaterial
+      );
+      banana.position.set(
+        (Math.random() - 0.5) * 10,
+        10,
+        (Math.random() - 0.5) * 10
+      );
+      scene.add(banana);
+      fallingBananas.push(banana);
+    }
+
+    // Controls
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+
+    document.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const dx = e.clientX - previousMousePosition.x;
+        const dy = e.clientY - previousMousePosition.y;
+        playerBanana.position.x += dx * 0.01;
+        playerBanana.position.z += dy * 0.01;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      }
+    });
+
+    // Game Loop
+    let score = 0;
+    const scoreText = document.createElement('div');
+    scoreText.style.position = 'absolute';
+    scoreText.style.top = '10px';
+    scoreText.style.left = '10px';
+    scoreText.style.color = 'white';
+    scoreText.style.fontSize = '24px';
+    document.body.appendChild(scoreText);
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Move falling bananas
+      fallingBananas.forEach(banana => {
+        banana.position.y -= 0.1;
+        if (banana.position.y < -5) {
+          banana.position.y = 10;
+          banana.position.x = (Math.random() - 0.5) * 10;
+          banana.position.z = (Math.random() - 0.5) * 10;
         }
+      });
 
-        function generateSentence() {
-            const name = getRandomItem(names);
-            const sentence = getRandomItem(sentences);
-            document.getElementById("person").textContent = `Person: ${name}`;
-            document.getElementById("banana-sentence").textContent = sentence;
+      // Collision detection
+      fallingBananas.forEach(banana => {
+        const distance = playerBanana.position.distanceTo(banana.position);
+        if (distance < 1.5) {
+          score++;
+          scoreText.textContent = `Score: ${score}`;
+          banana.position.y = 10;
+          banana.position.x = (Math.random() - 0.5) * 10;
+          banana.position.z = (Math.random() - 0.5) * 10;
         }
+      });
 
-        // Generate a sentence on page load
-        window.onload = generateSentence;
-    </script>
+      renderer.render(scene, camera);
+    }
 
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
 </body>
 </html>
