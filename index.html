@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I Love Bananas</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Banana Sentence</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,9 +21,23 @@
             font-size: 1.2em;
         }
 
-        .banana {
-            max-width: 300px;
-            margin: 20px auto;
+        .person {
+            font-style: italic;
+            color: #468252;
+        }
+
+        button {
+            background-color: #d2691e;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        button:hover {
+            background-color: #8b4513;
         }
 
         footer {
@@ -35,18 +49,53 @@
 </head>
 <body>
 
-    <h1>🍌 I Love Bananas!</h1>
+    <h1>🍌 Random Banana Sentence</h1>
     <p>
-        Bananas are my favorite fruit. They're delicious, easy to eat, and perfect for a quick snack. I love the way they taste, the way they feel in my hand, and the way they make me smile.
+        Here's a random banana sentence about a random person on the internet:
     </p>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Banana_01.jpg" alt="Banana" class="banana">
-    <p>
-        Whether I'm eating them raw, in a smoothie, or as part of a banana split, I can't get enough of them. They're also a great source of potassium and energy.
-    </p>
+    <div id="sentence" style="margin: 20px auto; max-width: 600px;">
+        <p id="person" class="person"></p>
+        <p id="banana-sentence"></p>
+    </div>
+    <button onclick="generateSentence()">Generate Sentence</button>
 
     <footer>
         &copy; 2025 Banana Lover
     </footer>
+
+    <script>
+        const names = [
+            "Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Hank", "Ivy", "Jack",
+            "Karen", "Leo", "Mona", "Neil", "Olivia", "Peter", "Quinn", "Raj", "Sara", "Tom"
+        ];
+
+        const sentences = [
+            "Bananas are the perfect snack for someone like you.",
+            "You're as smooth as a banana peel.",
+            "Bananas are the only fruit that can make you smile like that.",
+            "If you're feeling down, just think of a banana.",
+            "You're the kind of person who would love bananas.",
+            "Bananas are the fruit of the gods — and you're the god of this sentence.",
+            "You're as sweet as a banana.",
+            "Bananas are like you — always in a good mood.",
+            "You're the kind of person who would never say no to a banana.",
+            "Bananas are the perfect fruit for someone as awesome as you."
+        ];
+
+        function getRandomItem(list) {
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function generateSentence() {
+            const name = getRandomItem(names);
+            const sentence = getRandomItem(sentences);
+            document.getElementById("person").textContent = `Person: ${name}`;
+            document.getElementById("banana-sentence").textContent = sentence;
+        }
+
+        // Generate a sentence on page load
+        window.onload = generateSentence;
+    </script>
 
 </body>
 </html>
