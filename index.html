@@ -1,168 +1,144 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <title>ADAM BULLE JOHANSSON COIN</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>ADAM BULLE JOHANSSON COIN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: radial-gradient(circle at top, #111 0%, #000 70%);
-      color: #f5f5f5;
-    }
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(circle at top, #111 0%, #000 70%);
+    color: #f5f5f5;
+  }
 
-    header {
-      padding: 80px 20px;
-      text-align: center;
-    }
+  header {
+    padding: 60px 20px;
+    text-align: center;
+  }
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      letter-spacing: 2px;
-    }
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
 
-    h1 span {
-      color: gold;
-    }
+  h1 span { color: gold; }
 
-    /* Snurrande coin */
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+  @keyframes spin { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 20px rgba(0,255,153,0.6);}50%{box-shadow:0 0 40px rgba(0,255,153,1);} }
 
-    .coin-image {
-      width: 180px;
-      margin: 0 auto 25px;
-      display: block;
-      animation: spin 18s linear infinite;
-      filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
-    }
+  .coin-image {
+    width: 180px;
+    margin: 0 auto 20px;
+    display: block;
+    animation: spin 18s linear infinite, pulse 2s ease-in-out infinite;
+    border-radius: 50%;
+  }
 
-    .price {
-      font-size: 1.4rem;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+  .price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 10px;
+  }
 
-    .price span {
-      color: #00ff99;
-    }
+  .price span { color: #00ff99; }
 
-    .subtitle {
-      font-size: 1.2rem;
-      opacity: 0.85;
-      max-width: 700px;
-      margin: 20px auto;
-    }
+  .subtitle {
+    font-size: 1.2rem;
+    opacity: 0.85;
+    max-width: 700px;
+    margin: 15px auto 20px;
+  }
 
-    .cta a {
-      display: inline-block;
-      padding: 15px 35px;
-      background: gold;
-      color: #000;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 6px;
-      margin-top: 20px;
-    }
+  .cta a {
+    display: inline-block;
+    padding: 15px 35px;
+    background: gold;
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-top: 10px;
+  }
 
-    section {
-      padding: 60px 20px;
-      max-width: 1100px;
-      margin: auto;
-    }
+  section { padding: 40px 20px; max-width: 1100px; margin: auto; }
 
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      margin-bottom: 60px;
-    }
+  .features { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:30px; margin-bottom:40px; }
+  .card {
+    background: #111;
+    border: 1px solid #222;
+    padding: 25px;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .card:hover { transform: translateY(-5px); box-shadow:0 0 20px rgba(0,255,153,0.6); }
+  .card h3 { color: gold; margin-top: 0; }
 
-    .card {
-      background: #111;
-      border: 1px solid #222;
-      padding: 30px;
-      border-radius: 10px;
-    }
+  canvas {
+    width: 100%;
+    height: 320px;
+    background: #000;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
 
-    .card h3 {
-      color: gold;
-      margin-top: 0;
-    }
+  .stats { display:flex; justify-content: space-around; flex-wrap:wrap; margin-bottom:20px; }
+  .stat { margin:5px 15px; font-size:1rem; }
 
-    canvas {
-      width: 100%;
-      height: 320px;
-      background: #000;
-      border-radius: 8px;
-    }
+  .ticker-container {
+    height: 80px;
+    overflow: hidden;
+    background:#111;
+    border:1px solid #222;
+    border-radius:6px;
+    padding:5px 10px;
+    margin-bottom:20px;
+  }
+  .ticker { display:flex; flex-direction:column; animation: scroll 10s linear infinite; }
+  @keyframes scroll { 0%{transform:translateY(0);} 100%{transform:translateY(-50%);} }
 
-    footer {
-      padding: 40px 20px;
-      text-align: center;
-      font-size: 0.85rem;
-      opacity: 0.6;
-      border-top: 1px solid #222;
-    }
-  </style>
+  footer { padding: 20px; text-align:center; font-size:0.85rem; opacity:0.6; border-top:1px solid #222; }
+
+</style>
 </head>
 <body>
 
 <header>
   <h1>ADAM <span>BULLE</span> JOHANSSON COIN</h1>
-
-  <!-- RIKTIG BILD -->
   <img src="coin.PNG" alt="ADAM BULLE JOHANSSON COIN" class="coin-image">
-
   <div class="price">
     Pris: <span>3,467 SEK</span> / <span>0,33 USDT</span>
   </div>
-
-  <p class="subtitle">
-    Coinen snurrar. Priset rör sig. Du tittar fortfarande.
-  </p>
-
-  <div class="cta">
-    <a href="#">KÖP NU</a>
-  </div>
+  <p class="subtitle">Coinen snurrar. Grafen lever. Blockchain feed rullar live.</p>
+  <div class="cta"><a href="#">KÖP NU</a></div>
 </header>
 
 <section>
-
   <div class="features">
-    <div class="card">
-      <h3>🔥 Varför denna coin?</h3>
-      <p>För att rörelse slår löften. Alltid.</p>
-    </div>
-
-    <div class="card">
-      <h3>💰 Tokenomics</h3>
-      <p>Fast supply. Ingen reset. Ingen nåd.</p>
-    </div>
-
-    <div class="card">
-      <h3>🚀 Community</h3>
-      <p>De som ser momentum stannar.</p>
-    </div>
+    <div class="card"><h3>🔥 Varför denna coin?</h3><p>Rörelse slår löften. Alltid.</p></div>
+    <div class="card"><h3>💰 Tokenomics</h3><p>Fast supply. Ingen reset. Ingen pardon.</p></div>
+    <div class="card"><h3>🚀 Community</h3><p>De som ser momentum stannar.</p></div>
   </div>
 
   <div class="card">
-    <h3>📈 Live prisutveckling (simulerad)</h3>
+    <h3>📊 Live statistik</h3>
+    <div class="stats">
+      <div class="stat">24h Change: <span id="change">+0.0%</span></div>
+      <div class="stat">Volume: <span id="volume">0 ABJ</span></div>
+      <div class="stat">Supply: <span>1,000,000 ABJ</span></div>
+    </div>
+
     <canvas id="chart"></canvas>
   </div>
 
   <div class="card">
-    <h3>🔥 Marknadsstatus</h3>
-    <p>
-      Rörelse skapar uppmärksamhet. Uppmärksamhet skapar köp.
-    </p>
+    <h3>💹 Blockchain feed</h3>
+    <div class="ticker-container">
+      <div class="ticker" id="ticker"></div>
+    </div>
   </div>
-
 </section>
 
 <footer>
@@ -171,47 +147,58 @@
 </footer>
 
 <script>
+  // --- Candlestick-like fake graph ---
   const canvas = document.getElementById("chart");
   const ctx = canvas.getContext("2d");
-
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
 
   let price = 3.467;
-  let trend = 0.002;
   let points = Array(80).fill(price);
 
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.beginPath();
-    ctx.strokeStyle = "#00ff99";
-    ctx.lineWidth = 2;
-
-    points.forEach((p, i) => {
-      const x = (i / (points.length - 1)) * canvas.width;
-      const y = canvas.height - (p - 3.1) * 300;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    ctx.strokeStyle="#00ff99";
+    ctx.lineWidth=2;
+    points.forEach((p,i)=>{
+      const x=i/(points.length-1)*canvas.width;
+      const y=canvas.height-(p-3.1)*300;
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     });
-
     ctx.stroke();
   }
 
-  function update() {
-    const volatility = (Math.random() - 0.5) * 0.06;
-    const wave = Math.sin(Date.now() / 400) * 0.01;
-    price += trend + volatility + wave;
-
-    if (Math.random() < 0.05) {
-      price += (Math.random() - 0.3) * 0.15;
-    }
-
+  function updateGraph() {
+    const volatility=(Math.random()-0.5)*0.06;
+    const wave=Math.sin(Date.now()/400)*0.01;
+    price+=0.002+volatility+wave;
+    if(Math.random()<0.05) price+=(Math.random()-0.3)*0.15;
     points.push(price);
     points.shift();
     draw();
+    document.getElementById("change").innerText=((price-3.467)/3.467*100).toFixed(2)+'%';
+    document.getElementById("volume").innerText=Math.floor(Math.random()*50+1)+' ABJ';
   }
 
-  setInterval(update, 500);
+  setInterval(updateGraph,500);
   draw();
+
+  // --- Blockchain feed ---
+  const tickerEl=document.getElementById("ticker");
+  const actions=["bought","sold"];
+  function randomFeed(){
+    const user="User"+Math.floor(Math.random()*999);
+    const amount=Math.floor(Math.random()*20+1);
+    const action=actions[Math.floor(Math.random()*actions.length)];
+    const priceNow=(price+((Math.random()-0.5)*0.05)).toFixed(3);
+    const line=`${user} ${action} ${amount} ABJ @ ${priceNow} SEK`;
+    const div=document.createElement("div");
+    div.innerText=line;
+    tickerEl.appendChild(div);
+    if(tickerEl.children.length>20) tickerEl.removeChild(tickerEl.children[0]);
+  }
+  setInterval(randomFeed,1000);
 </script>
 
 </body>
