@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>ADAM BULLE JOHANSSON COIN</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       margin: 0;
@@ -27,22 +28,19 @@
       color: gold;
     }
 
-    /* 🔄 COIN ROTATION */
     @keyframes spin {
       from { transform: rotate(0deg); }
       to   { transform: rotate(360deg); }
     }
 
-    .coin-image {
+    .coin-wrapper {
       width: 180px;
-      margin: 0 auto 20px;
-      display: block;
+      margin: 0 auto 25px;
       animation: spin 18s linear infinite;
-      filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
+      filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.5));
     }
 
     .price {
-      margin-top: 10px;
       font-size: 1.4rem;
       font-weight: bold;
     }
@@ -55,11 +53,7 @@
       font-size: 1.2rem;
       opacity: 0.85;
       max-width: 700px;
-      margin: 20px auto 0;
-    }
-
-    .cta {
-      margin-top: 30px;
+      margin: 20px auto;
     }
 
     .cta a {
@@ -70,12 +64,13 @@
       font-weight: bold;
       text-decoration: none;
       border-radius: 6px;
+      margin-top: 20px;
     }
 
     section {
       padding: 60px 20px;
       max-width: 1100px;
-      margin: 0 auto;
+      margin: auto;
     }
 
     .features {
@@ -93,8 +88,8 @@
     }
 
     .card h3 {
-      margin-top: 0;
       color: gold;
+      margin-top: 0;
     }
 
     canvas {
@@ -118,14 +113,36 @@
 <header>
   <h1>ADAM <span>BULLE</span> JOHANSSON COIN</h1>
 
-  <img src="coin.png" alt="ADAM BULLE JOHANSSON COIN" class="coin-image">
+  <!-- INLINE SVG COIN (KAN INTE FAILA) -->
+  <div class="coin-wrapper">
+    <svg viewBox="0 0 200 200" width="100%" height="100%">
+      <defs>
+        <radialGradient id="gold" cx="30%" cy="30%">
+          <stop offset="0%" stop-color="#fff2b2"/>
+          <stop offset="60%" stop-color="#ffd700"/>
+          <stop offset="100%" stop-color="#b8860b"/>
+        </radialGradient>
+      </defs>
+
+      <circle cx="100" cy="100" r="90" fill="url(#gold)" stroke="#ffea9e" stroke-width="6"/>
+      <circle cx="100" cy="100" r="70" fill="none" stroke="#000" stroke-opacity="0.2"/>
+
+      <text x="100" y="115"
+            text-anchor="middle"
+            font-size="48"
+            font-weight="bold"
+            fill="#111">
+        ABJ
+      </text>
+    </svg>
+  </div>
 
   <div class="price">
     Pris: <span>3,467 SEK</span> / <span>0,33 USDT</span>
   </div>
 
   <p class="subtitle">
-    Den snurrar. Priset rör sig. Folk tittar för länge.
+    Coinen snurrar. Priset rör sig. Du tittar fortfarande.
   </p>
 
   <div class="cta">
@@ -138,23 +155,17 @@
   <div class="features">
     <div class="card">
       <h3>🔥 Varför denna coin?</h3>
-      <p>
-        För att stillastående projekt är döda projekt.
-      </p>
+      <p>För att rörelse slår löften. Alltid.</p>
     </div>
 
     <div class="card">
       <h3>💰 Tokenomics</h3>
-      <p>
-        Begränsad supply. Ingen återvändo.
-      </p>
+      <p>Fast supply. Ingen reset. Ingen nåd.</p>
     </div>
 
     <div class="card">
       <h3>🚀 Community</h3>
-      <p>
-        De som fattar stannar. Resten tittar.
-      </p>
+      <p>De som ser momentum stannar.</p>
     </div>
   </div>
 
@@ -163,18 +174,11 @@
     <canvas id="chart"></canvas>
   </div>
 
-  <div class="card">
-    <h3>🔥 Marknadsstatus</h3>
-    <p>
-      Rörelse skapar uppmärksamhet. Uppmärksamhet skapar köp.
-    </p>
-  </div>
-
 </section>
 
 <footer>
   © 2026 ADAM BULLE JOHANSSON COIN<br>
-  Inte rådgivning. Bara rörelse.
+  Inte rådgivning. Bara verklighet.
 </footer>
 
 <script>
@@ -190,7 +194,6 @@
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     ctx.beginPath();
     ctx.strokeStyle = "#00ff99";
     ctx.lineWidth = 2;
@@ -198,9 +201,7 @@
     points.forEach((p, i) => {
       const x = (i / (points.length - 1)) * canvas.width;
       const y = canvas.height - (p - 3.1) * 300;
-
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
 
     ctx.stroke();
@@ -209,7 +210,6 @@
   function update() {
     const volatility = (Math.random() - 0.5) * 0.06;
     const wave = Math.sin(Date.now() / 400) * 0.01;
-
     price += trend + volatility + wave;
 
     if (Math.random() < 0.05) {
