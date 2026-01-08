@@ -27,15 +27,25 @@
       color: gold;
     }
 
-    p.subtitle {
+    .price {
+      margin-top: 20px;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .price span {
+      color: #00ff99;
+    }
+
+    .subtitle {
       font-size: 1.2rem;
       opacity: 0.85;
       max-width: 700px;
-      margin: 0 auto;
+      margin: 20px auto 0;
     }
 
     .cta {
-      margin-top: 40px;
+      margin-top: 30px;
     }
 
     .cta a {
@@ -46,12 +56,6 @@
       font-weight: bold;
       text-decoration: none;
       border-radius: 6px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .cta a:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
     }
 
     section {
@@ -60,22 +64,19 @@
       margin: 0 auto;
     }
 
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-    }
-
     .card {
       background: #111;
       border: 1px solid #222;
       padding: 30px;
       border-radius: 10px;
+      margin-bottom: 40px;
     }
 
-    .card h3 {
-      margin-top: 0;
-      color: gold;
+    canvas {
+      width: 100%;
+      height: 300px;
+      background: #000;
+      border-radius: 8px;
     }
 
     footer {
@@ -91,48 +92,79 @@
 
 <header>
   <h1>ADAM <span>BULLE</span> JOHANSSON COIN</h1>
+
+  <div class="price">
+    Pris: <span>3,467 SEK</span> / <span>0,33 USDT</span>
+  </div>
+
   <p class="subtitle">
-    En coin byggd på rå hype, brutal ärlighet och total likgiltighet för traditionella finanssystem.
-    Ingen bullshit. Bara BULLE-energi.
+    Priset rör sig. Sakta uppåt. Inga garantier. Bara momentum.
   </p>
 
   <div class="cta">
-    <a href="#">KÖP COINEN</a>
+    <a href="#">KÖP NU</a>
   </div>
 </header>
 
 <section>
-  <div class="features">
-    <div class="card">
-      <h3>🔥 Varför denna coin?</h3>
-      <p>
-        För att världen är full av tråkiga projekt med tomma löften.
-        ADAM BULLE JOHANSSON COIN gör inga löften alls.
-      </p>
-    </div>
+  <div class="card">
+    <h3>📈 Live prisutveckling (simulerad)</h3>
+    <canvas id="chart"></canvas>
+  </div>
 
-    <div class="card">
-      <h3>💰 Tokenomics</h3>
-      <p>
-        Fast supply. Ingen mint. Ingen reset.
-        Om du missar tåget är det ditt problem.
-      </p>
-    </div>
-
-    <div class="card">
-      <h3>🚀 Community</h3>
-      <p>
-        Inga falska leenden. Inga corporate slogans.
-        Bara folk som fattar grejen – eller inte.
-      </p>
-    </div>
+  <div class="card">
+    <h3>🔥 Marknadsstatus</h3>
+    <p>
+      Volatil men positiv trend. Små dippar. Stadig återhämtning.
+      Exakt som det ska vara innan folk “upptäcker” den.
+    </p>
   </div>
 </section>
 
 <footer>
   © 2026 ADAM BULLE JOHANSSON COIN<br>
-  Detta är inte finansiell rådgivning. Om du förlorar pengar, skyll inte på oss.
+  Detta är inte finansiell rådgivning. Köp om du vågar.
 </footer>
+
+<script>
+  const canvas = document.getElementById("chart");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+
+  let price = 3.467;
+  let points = Array(60).fill(price);
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.strokeStyle = "#00ff99";
+    ctx.lineWidth = 2;
+
+    points.forEach((p, i) => {
+      const x = (i / (points.length - 1)) * canvas.width;
+      const y = canvas.height - (p - 3.3) * 400;
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+
+    ctx.stroke();
+  }
+
+  function update() {
+    const change = (Math.random() - 0.4) * 0.01;
+    price += change;
+    points.push(price);
+    points.shift();
+    draw();
+  }
+
+  setInterval(update, 1000);
+  draw();
+</script>
 
 </body>
 </html>
