@@ -19,7 +19,7 @@
 
     h1 {
       font-size: 3rem;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       letter-spacing: 2px;
     }
 
@@ -27,8 +27,15 @@
       color: gold;
     }
 
+    .coin-image {
+      width: 180px;
+      margin: 0 auto 20px;
+      display: block;
+      filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
+    }
+
     .price {
-      margin-top: 20px;
+      margin-top: 10px;
       font-size: 1.4rem;
       font-weight: bold;
     }
@@ -104,12 +111,15 @@
 <header>
   <h1>ADAM <span>BULLE</span> JOHANSSON COIN</h1>
 
+  <!-- COIN IMAGE -->
+  <img src="coin.png" alt="ADAM BULLE JOHANSSON COIN" class="coin-image">
+
   <div class="price">
     Pris: <span>3,467 SEK</span> / <span>0,33 USDT</span>
   </div>
 
   <p class="subtitle">
-    Priset rör sig. Snabbare nu. Volatilt, levande och irriterande svårt att tajma.
+    Priset rör sig. Snabbt. Volatilt. Och coinen har nu ett ansikte.
   </p>
 
   <div class="cta">
@@ -123,8 +133,8 @@
     <div class="card">
       <h3>🔥 Varför denna coin?</h3>
       <p>
-        För att 99% av coins ljuger med powerpoints.
-        Den här ljuger med självförtroende.
+        För att tråkiga coins dör tyst.
+        Den här vill synas.
       </p>
     </div>
 
@@ -132,15 +142,15 @@
       <h3>💰 Tokenomics</h3>
       <p>
         Begränsad supply. Ingen mint.
-        Missar du uppgången finns ingen reset-knapp.
+        Ingen pardon.
       </p>
     </div>
 
     <div class="card">
       <h3>🚀 Community</h3>
       <p>
-        Inga influencers. Inga leenden.
-        Bara folk som ser rörelsen och hoppar på.
+        Inga masker. Inga slogans.
+        Bara rörelse.
       </p>
     </div>
   </div>
@@ -153,8 +163,8 @@
   <div class="card">
     <h3>🔥 Marknadsstatus</h3>
     <p>
-      Hög volatilitet. Snabba spikes. Små panikdippar.
-      Exakt det som får folk att stirra på grafen för länge.
+      Volatil, aggressiv och lockande.
+      Exakt den typ av graf folk inte kan sluta titta på.
     </p>
   </div>
 
@@ -162,7 +172,7 @@
 
 <footer>
   © 2026 ADAM BULLE JOHANSSON COIN<br>
-  Detta är inte finansiell rådgivning. Du är vuxen. Ditt val.
+  Detta är inte finansiell rådgivning. Skyll inte på grafen.
 </footer>
 
 <script>
@@ -173,7 +183,7 @@
   canvas.height = canvas.offsetHeight;
 
   let price = 3.467;
-  let trend = 0.002; // uppåt-tryck
+  let trend = 0.002;
   let points = Array(80).fill(price);
 
   function draw() {
@@ -195,13 +205,11 @@
   }
 
   function update() {
-    // mer aggressiv rörelse
     const volatility = (Math.random() - 0.5) * 0.06;
     const wave = Math.sin(Date.now() / 400) * 0.01;
 
     price += trend + volatility + wave;
 
-    // ibland extra spike
     if (Math.random() < 0.05) {
       price += (Math.random() - 0.3) * 0.15;
     }
