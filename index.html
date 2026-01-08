@@ -28,21 +28,24 @@
       color: gold;
     }
 
+    /* Snurrande coin */
     @keyframes spin {
       from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
     }
 
-    .coin-wrapper {
+    .coin-image {
       width: 180px;
       margin: 0 auto 25px;
+      display: block;
       animation: spin 18s linear infinite;
-      filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.5));
+      filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
     }
 
     .price {
       font-size: 1.4rem;
       font-weight: bold;
+      margin-top: 10px;
     }
 
     .price span {
@@ -113,29 +116,8 @@
 <header>
   <h1>ADAM <span>BULLE</span> JOHANSSON COIN</h1>
 
-  <!-- INLINE SVG COIN (KAN INTE FAILA) -->
-  <div class="coin-wrapper">
-    <svg viewBox="0 0 200 200" width="100%" height="100%">
-      <defs>
-        <radialGradient id="gold" cx="30%" cy="30%">
-          <stop offset="0%" stop-color="#fff2b2"/>
-          <stop offset="60%" stop-color="#ffd700"/>
-          <stop offset="100%" stop-color="#b8860b"/>
-        </radialGradient>
-      </defs>
-
-      <circle cx="100" cy="100" r="90" fill="url(#gold)" stroke="#ffea9e" stroke-width="6"/>
-      <circle cx="100" cy="100" r="70" fill="none" stroke="#000" stroke-opacity="0.2"/>
-
-      <text x="100" y="115"
-            text-anchor="middle"
-            font-size="48"
-            font-weight="bold"
-            fill="#111">
-        ABJ
-      </text>
-    </svg>
-  </div>
+  <!-- RIKTIG BILD -->
+  <img src="coin.png" alt="ADAM BULLE JOHANSSON COIN" class="coin-image">
 
   <div class="price">
     Pris: <span>3,467 SEK</span> / <span>0,33 USDT</span>
@@ -172,6 +154,13 @@
   <div class="card">
     <h3>📈 Live prisutveckling (simulerad)</h3>
     <canvas id="chart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>🔥 Marknadsstatus</h3>
+    <p>
+      Rörelse skapar uppmärksamhet. Uppmärksamhet skapar köp.
+    </p>
   </div>
 
 </section>
