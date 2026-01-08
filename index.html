@@ -27,10 +27,17 @@
       color: gold;
     }
 
+    /* 🔄 COIN ROTATION */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
     .coin-image {
       width: 180px;
       margin: 0 auto 20px;
       display: block;
+      animation: spin 18s linear infinite;
       filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
     }
 
@@ -111,7 +118,6 @@
 <header>
   <h1>ADAM <span>BULLE</span> JOHANSSON COIN</h1>
 
-  <!-- COIN IMAGE -->
   <img src="coin.png" alt="ADAM BULLE JOHANSSON COIN" class="coin-image">
 
   <div class="price">
@@ -119,7 +125,7 @@
   </div>
 
   <p class="subtitle">
-    Priset rör sig. Snabbt. Volatilt. Och coinen har nu ett ansikte.
+    Den snurrar. Priset rör sig. Folk tittar för länge.
   </p>
 
   <div class="cta">
@@ -133,24 +139,21 @@
     <div class="card">
       <h3>🔥 Varför denna coin?</h3>
       <p>
-        För att tråkiga coins dör tyst.
-        Den här vill synas.
+        För att stillastående projekt är döda projekt.
       </p>
     </div>
 
     <div class="card">
       <h3>💰 Tokenomics</h3>
       <p>
-        Begränsad supply. Ingen mint.
-        Ingen pardon.
+        Begränsad supply. Ingen återvändo.
       </p>
     </div>
 
     <div class="card">
       <h3>🚀 Community</h3>
       <p>
-        Inga masker. Inga slogans.
-        Bara rörelse.
+        De som fattar stannar. Resten tittar.
       </p>
     </div>
   </div>
@@ -163,8 +166,7 @@
   <div class="card">
     <h3>🔥 Marknadsstatus</h3>
     <p>
-      Volatil, aggressiv och lockande.
-      Exakt den typ av graf folk inte kan sluta titta på.
+      Rörelse skapar uppmärksamhet. Uppmärksamhet skapar köp.
     </p>
   </div>
 
@@ -172,7 +174,7 @@
 
 <footer>
   © 2026 ADAM BULLE JOHANSSON COIN<br>
-  Detta är inte finansiell rådgivning. Skyll inte på grafen.
+  Inte rådgivning. Bara rörelse.
 </footer>
 
 <script>
