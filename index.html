@@ -64,17 +64,28 @@
       margin: 0 auto;
     }
 
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
     .card {
       background: #111;
       border: 1px solid #222;
       padding: 30px;
       border-radius: 10px;
-      margin-bottom: 40px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: gold;
     }
 
     canvas {
       width: 100%;
-      height: 300px;
+      height: 320px;
       background: #000;
       border-radius: 8px;
     }
@@ -98,7 +109,7 @@
   </div>
 
   <p class="subtitle">
-    Priset rör sig. Sakta uppåt. Inga garantier. Bara momentum.
+    Priset rör sig. Snabbare nu. Volatilt, levande och irriterande svårt att tajma.
   </p>
 
   <div class="cta">
@@ -107,6 +118,33 @@
 </header>
 
 <section>
+
+  <div class="features">
+    <div class="card">
+      <h3>🔥 Varför denna coin?</h3>
+      <p>
+        För att 99% av coins ljuger med powerpoints.
+        Den här ljuger med självförtroende.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>💰 Tokenomics</h3>
+      <p>
+        Begränsad supply. Ingen mint.
+        Missar du uppgången finns ingen reset-knapp.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>🚀 Community</h3>
+      <p>
+        Inga influencers. Inga leenden.
+        Bara folk som ser rörelsen och hoppar på.
+      </p>
+    </div>
+  </div>
+
   <div class="card">
     <h3>📈 Live prisutveckling (simulerad)</h3>
     <canvas id="chart"></canvas>
@@ -115,15 +153,16 @@
   <div class="card">
     <h3>🔥 Marknadsstatus</h3>
     <p>
-      Volatil men positiv trend. Små dippar. Stadig återhämtning.
-      Exakt som det ska vara innan folk “upptäcker” den.
+      Hög volatilitet. Snabba spikes. Små panikdippar.
+      Exakt det som får folk att stirra på grafen för länge.
     </p>
   </div>
+
 </section>
 
 <footer>
   © 2026 ADAM BULLE JOHANSSON COIN<br>
-  Detta är inte finansiell rådgivning. Köp om du vågar.
+  Detta är inte finansiell rådgivning. Du är vuxen. Ditt val.
 </footer>
 
 <script>
@@ -134,7 +173,8 @@
   canvas.height = canvas.offsetHeight;
 
   let price = 3.467;
-  let points = Array(60).fill(price);
+  let trend = 0.002; // uppåt-tryck
+  let points = Array(80).fill(price);
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -145,7 +185,7 @@
 
     points.forEach((p, i) => {
       const x = (i / (points.length - 1)) * canvas.width;
-      const y = canvas.height - (p - 3.3) * 400;
+      const y = canvas.height - (p - 3.1) * 300;
 
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
@@ -155,14 +195,23 @@
   }
 
   function update() {
-    const change = (Math.random() - 0.4) * 0.01;
-    price += change;
+    // mer aggressiv rörelse
+    const volatility = (Math.random() - 0.5) * 0.06;
+    const wave = Math.sin(Date.now() / 400) * 0.01;
+
+    price += trend + volatility + wave;
+
+    // ibland extra spike
+    if (Math.random() < 0.05) {
+      price += (Math.random() - 0.3) * 0.15;
+    }
+
     points.push(price);
     points.shift();
     draw();
   }
 
-  setInterval(update, 1000);
+  setInterval(update, 500);
   draw();
 </script>
 
